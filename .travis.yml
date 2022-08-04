@@ -2,13 +2,16 @@ language: generic
 
 sudo: required
 
+services:
+  - docker
+
 deploy: {
   provider: "elasticbeanstalk",
   region: "eu-central-1",
   app: "docker-rc",
   env: "Dockerrc-env",
   bucket_name: "elasticbeanstalk-eu-central-1-186018379257",
-  bucket_path: "docker-rc-test",
+  bucket_path: "docker-rc",
   on: {
     branch: [
      "master",
