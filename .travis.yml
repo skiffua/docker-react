@@ -1,8 +1,5 @@
 language: generic
 
-services:
-  - docker
-
 deploy: {
   provider: "elasticbeanstalk",
   region: "eu-central-1",
