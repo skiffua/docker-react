@@ -1,12 +1,26 @@
-FROM ubuntu:12.04
+#Specify a base image
+FROM node:alpine
 
-RUN apt-get update
-RUN apt-get install -y nginx zip curl
+#Specify a working directory
+WORKDIR '/app'
 
-RUN echo "daemon off;" >> /etc/nginx/nginx.conf
-RUN curl -o /usr/share/nginx/www/master.zip -L https://codeload.github.com/gabrielecirulli/2048/zip/master
-RUN cd /usr/share/nginx/www/ && unzip master.zip && mv 2048-master/* . && rm -rf 2048-master master.zip
+#Copy the dependencies file
+COPY package*.json ./
 
+#Install dependencies
+RUN npm install
+
+#Copy remaining files
+COPY . .
+
+#Build the project for production
+RUN npm run build
+
+#Run Stage Start
+FROM nginx:alpine
+
+# expose port 80 
 EXPOSE 80
 
-CMD ["/usr/sbin/nginx", "-c", "/etc/nginx/nginx.conf"]
+#Copy production build files from builder phase to nginx
+COPY --from=0 /app/build /usr/share/nginx/html
